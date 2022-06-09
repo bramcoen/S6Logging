@@ -25,16 +25,18 @@ public class UserEditWorker : BackgroundService
         {
             var body = ea.Body.ToArray();
             var message = System.Text.Json.JsonSerializer.Deserialize<User>(body, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            if (message == null) return;
-            await _loggingRepository.StoreLoggingActionAsync(new LoggingAction(System.Text.UTF8Encoding.UTF8.GetString(body), message.Id));
+            if (message != null && message.Id != null)
+            {
+                await _loggingRepository.StoreLoggingActionAsync(new LoggingAction(System.Text.UTF8Encoding.UTF8.GetString(body), message.Id,"User has been modified"));
+            }
             _logger.LogInformation("Processed a message in UserWorker");
             _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+
+
+            _channel.BasicConsume(queue: "logging/user",
+                                 autoAck: false,
+                                 consumer: consumer);
         };
-
-        _channel.BasicConsume(queue: "logging/user",
-                             autoAck: false,
-                             consumer: consumer);
-
         return Task.CompletedTask;
     }
 
