@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose.exe convert
+    kompose.version: 1.26.1 (a9d05d509)
+  labels:
+    io.kompose.service: loggingservice
+  name: loggingservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: loggingservice
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose.exe convert
+        kompose.version: 1.26.1 (a9d05d509)
+      labels:
+        io.kompose.service: loggingservice
+    spec:
+      containers:
+        - image: bramco/brams6messaging
+          name: loggingservice
+          env:
+            - name: RabbitMQHostname
+              valueFrom:
+                secretKeyRef:
+                  name: loggingsecret 
+                  key: RabbitMQHostname
+            - name: MongoDBConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: loggingsecret 
+                  key: MongoDBConnectionString            
+            - name: RabbitMQUsername
+              valueFrom:
+                secretKeyRef:
+                  name: loggingsecret 
+                  key: RabbitMQUsername
+            - name: RabbitMQPassword
+              valueFrom:
+                secretKeyRef:
+                  name: loggingsecret 
+                  key: RabbitMQPassword
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources: {}
+      hostname: loggingservice
+      restartPolicy: Always
+status: {}
