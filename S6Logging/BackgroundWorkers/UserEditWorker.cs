@@ -4,7 +4,6 @@ using RabbitMQ.Client.Events;
 public class UserEditWorker : BackgroundService
 {
     ILogger _logger;
-    ConnectionFactory _connectionFactory;
     IConnection _connection;
     IModel _channel;
     IConfiguration _configuration;
@@ -42,12 +41,12 @@ public class UserEditWorker : BackgroundService
 
     public override Task StartAsync(CancellationToken cancellationToken)
     {
-        _connectionFactory = new ConnectionFactory
+        ConnectionFactory _connectionFactory = new ConnectionFactory()
         {
-            HostName = _configuration["RabbitMQHostname"],
+            HostName = _configuration.GetValue<string>("RabbitMQHostname"),
+            UserName = _configuration.GetValue<string>("RabbitMQUsername"),
+            Password = _configuration.GetValue<string>("RabbitMQPassword"),
             Port = 5672,
-            UserName = "guest",
-            Password = "guest",
             DispatchConsumersAsync = true
         };
         _connection = _connectionFactory.CreateConnection();
