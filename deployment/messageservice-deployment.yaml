@@ -23,7 +23,7 @@ spec:
         io.kompose.service: loggingservice
     spec:
       containers:
-        - image: bramco/brams6messaging
+        - image: bramco/brams6loggings
           name: loggingservice
           env:
             - name: RabbitMQHostname
