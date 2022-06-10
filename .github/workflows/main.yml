@@ -110,11 +110,11 @@ jobs:
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_CLUSTER }}
 
 #Deploy secrets
-    - name: Create Secret loggingsecret
-      run: kubectl delete secret userservicesecret
+    - name: Delete Secret loggingsecret
+      run: kubectl delete secret loggingsecret
       continue-on-error: true
       
-    - name: Create Secret userservicesecret
+    - name: Create Secret loggingsecret
       run: kubectl create secret generic loggingsecret --from-literal=RabbitMQUsername=${{ secrets.RabbitMQUsername }} --from-literal=RabbitMQPassword=${{ secrets.RabbitMQPassword }} --from-literal=RabbitMQHostname=${{ secrets.RabbitMQHostname }} --from-literal=MongoDBConnectionString=${{ secrets.MongoDBConnectionString }}
    
 
