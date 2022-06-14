@@ -21,7 +21,7 @@ namespace S6Logging.Controllers
         }
 
         // GET: LoggingController
-        [HttpGet()]
+        [HttpGet("me")]
         public async Task<IActionResult> GetLoggingActions([FromHeader] string token)
         {
             Payload? payload = await GoogleJsonWebSignature.ValidateAsync(token, _validationSettings);
