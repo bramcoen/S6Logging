@@ -10,9 +10,12 @@ namespace S6Logging.Controllers
         private readonly ValidationSettings _validationSettings;
         private readonly ILoggingRepository _loggingRepository;
         private readonly IUserRepository _userRepository;
-        public LoggingController(ValidationSettings validationSettings, ILoggingRepository loggingRepository,IUserRepository userRepository)
+        public LoggingController(IConfiguration configuration, ILoggingRepository loggingRepository,IUserRepository userRepository)
         {
-            _validationSettings = validationSettings;
+            _validationSettings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new string[] { configuration["GOOGLE_CLIENT_ID"] }
+            };
             _loggingRepository = loggingRepository;
             _userRepository = userRepository;
         }
