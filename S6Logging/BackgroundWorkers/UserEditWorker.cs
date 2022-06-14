@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using MongoDBRepository;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 public class UserEditWorker : BackgroundService
@@ -8,11 +9,13 @@ public class UserEditWorker : BackgroundService
     IModel _channel;
     IConfiguration _configuration;
     ILoggingRepository _loggingRepository;
+    IUserRepository _userRepository;
     public UserEditWorker(ILogger<UserEditWorker> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
         _loggingRepository = new LoggingRepository(configuration);
+        _userRepository = new UserRepository(configuration);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,6 +27,7 @@ public class UserEditWorker : BackgroundService
         {
             var body = ea.Body.ToArray();
             var message = System.Text.Json.JsonSerializer.Deserialize<User>(body, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            if (message != null) await _userRepository.RegisterOrUpdateUser(message.Name, message.Id, message.Email);
             if (message != null && message.Id != null)
             {
                 await _loggingRepository.StoreLoggingActionAsync(new LoggingAction(System.Text.UTF8Encoding.UTF8.GetString(body), message.Id,"User has been modified"));
