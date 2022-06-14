@@ -4,6 +4,9 @@ using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace S6Logging.Controllers
 {
+    [ApiController]
+    [Route("")]
+    [EnableCors("default")]
     public class LoggingController : Controller
     {
 

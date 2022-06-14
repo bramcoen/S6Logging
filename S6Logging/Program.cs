@@ -3,7 +3,10 @@ using MongoDBRepository;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddCors(options => {
+    //Check should be handled by the gateway
+    options.AddPolicy("default", build => build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader());
+});
 builder.Services.AddControllers();
 
 builder.Services.AddHostedService<UserEditWorker>();
