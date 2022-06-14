@@ -1,4 +1,5 @@
 using MongoDBRepository;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,15 @@ builder.Services.AddSingleton<IUserRepository,UserRepository>();
 builder.Services.AddSingleton<ILoggingRepository, LoggingRepository>();
 var app = builder.Build();
 
+app.UseRouting();
+app.UseCors();
 // Configure the HTTP request pipeline.
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapMetrics();
+});
+app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.MapControllers();
 
