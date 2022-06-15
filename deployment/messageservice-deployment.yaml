@@ -46,6 +46,11 @@ spec:
                 secretKeyRef:
                   name: loggingsecret 
                   key: RabbitMQPassword
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: loggingsecret 
+                  key: GOOGLE_CLIENT_ID
           imagePullPolicy: Always
           ports:
             - containerPort: 80
