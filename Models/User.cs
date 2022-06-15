@@ -7,10 +7,11 @@ public class User
     {
 
     }
-    public User(string name, string email)
+    public User(string name, string email, string id)
     {
         Name = name;
         Email = email;
+        Id = id;
     }
     public string? Email { get; set; }
     public string? Name { get; set; }

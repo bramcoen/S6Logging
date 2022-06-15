@@ -36,7 +36,7 @@ namespace MongoDBRepository
                 var user = await GetById(userId);
                 if (user == null)
                 {
-                    user = new User(name, userId) { Email = email };
+                    user = new User(name,email, userId);
                     await _usersCollection.InsertOneAsync(user);
                     return user;
                 }
