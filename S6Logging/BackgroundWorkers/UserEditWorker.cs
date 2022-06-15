@@ -30,7 +30,7 @@ public class UserEditWorker : BackgroundService
             if (message != null) await _userRepository.RegisterOrUpdateUser(message.Name, message.Id, message.Email);
             if (message != null && message.Id != null)
             {
-                await _loggingRepository.StoreLoggingActionAsync(new LoggingAction(System.Text.UTF8Encoding.UTF8.GetString(body), message.Id,"User has been modified"));
+                await _loggingRepository.StoreLoggingActionAsync(new LoggingAction(System.Text.UTF8Encoding.UTF8.GetString(body), message.Id,$"Registered/modified user with Username: {message.Name} and Email {message.Email}"));
             }
             _logger.LogInformation("Processed a message in UserWorker");
             _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
